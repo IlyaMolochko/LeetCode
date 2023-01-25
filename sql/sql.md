@@ -282,3 +282,95 @@ from person p1
          inner join person p2
                     on p1.email = p2.email and p1.id > p2.id;
 ```
+
+# 1667. Fix Names in a Table
+
+```mysql
+Create table If Not Exists Users (user_id int, name varchar(40));
+Truncate table Users;
+insert into Users (user_id, name) values ('1', 'aLice');
+insert into Users (user_id, name) values ('2', 'bOB');
+```
+
+user_id is the primary key for this table.
+
+This table contains the ID and the name of the user. The name consists of only lowercase and uppercase characters.
+
+
+Write an SQL query to fix the names so that only the first character is uppercase and the rest are lowercase.
+
+Return the result table ordered by user_id.
+
+```mysql
+select user_id,
+       concat(upper(substring(name, 1, 1)), lower(substring(name, 2))) as name
+from users
+order by user_id;
+```
+
+# 1484. Group Sold Products By The Date
+
+```mysql
+Create table If Not Exists Activities (sell_date date, product varchar(20));
+Truncate table Activities;
+insert into Activities (sell_date, product) values ('2020-05-30', 'Headphone');
+insert into Activities (sell_date, product) values ('2020-06-01', 'Pencil');
+insert into Activities (sell_date, product) values ('2020-06-02', 'Mask');
+insert into Activities (sell_date, product) values ('2020-05-30', 'Basketball');
+insert into Activities (sell_date, product) values ('2020-06-01', 'Bible');
+insert into Activities (sell_date, product) values ('2020-06-02', 'Mask');
+insert into Activities (sell_date, product) values ('2020-05-30', 'T-Shirt');
+```
+
+Table Activities:
+
+There is no primary key for this table, it may contain duplicates.
+
+Each row of this table contains the product name and the date it was sold in a market.
+
+
+Write an SQL query to find for each date the number of different products sold and their names.
+
+The sold products names for each date should be sorted lexicographically.
+
+Return the result table ordered by sell_date.
+
+```mysql
+select sell_date,
+       count(distinct product) as num_sold,
+       group_concat(distinct product order by product separator ',') as products
+from activities
+group by sell_date
+order by sell_date;
+```
+
+# 1527. Patients With a Condition
+
+```mysql
+Create table If Not Exists Patients (patient_id int, patient_name varchar(30), conditions varchar(100));
+Truncate table Patients;
+insert into Patients (patient_id, patient_name, conditions) values ('1', 'Daniel', 'YFEV COUGH');
+insert into Patients (patient_id, patient_name, conditions) values ('2', 'Alice', '');
+insert into Patients (patient_id, patient_name, conditions) values ('3', 'Bob', 'DIAB100 MYOP');
+insert into Patients (patient_id, patient_name, conditions) values ('4', 'George', 'ACNE DIAB100');
+insert into Patients (patient_id, patient_name, conditions) values ('5', 'Alain', 'DIAB201');
+```
+
+patient_id is the primary key for this table.
+
+'conditions' contains 0 or more code separated by spaces.
+
+This table contains information of the patients in the hospital.
+
+Write an SQL query to report the patient_id, patient_name and conditions of the patients who have Type I Diabetes. Type I Diabetes always starts with DIAB1 prefix.
+
+Return the result table in any order.
+
+```mysql
+select patient_id,
+       patient_name,
+       conditions
+from patients
+where (conditions like '% DIAB1%' or conditions like 'DIAB1%');
+```
+
