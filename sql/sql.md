@@ -191,13 +191,23 @@ where t2.id is null;
 # 1873. Calculate Special Bonus
 
 ```mysql
-Create table If Not Exists Employees (employee_id int, name varchar(30), salary int);
+Create table If Not Exists Employees
+(
+    employee_id int,
+    name        varchar(30),
+    salary      int
+);
 Truncate table Employees;
-insert into Employees (employee_id, name, salary) values ('2', 'Meir', '3000');
-insert into Employees (employee_id, name, salary) values ('3', 'Michael', '3800');
-insert into Employees (employee_id, name, salary) values ('7', 'Addilyn', '7400');
-insert into Employees (employee_id, name, salary) values ('8', 'Juan', '6100');
-insert into Employees (employee_id, name, salary) values ('9', 'Kannon', '7700');
+insert into Employees (employee_id, name, salary)
+values ('2', 'Meir', '3000');
+insert into Employees (employee_id, name, salary)
+values ('3', 'Michael', '3800');
+insert into Employees (employee_id, name, salary)
+values ('7', 'Addilyn', '7400');
+insert into Employees (employee_id, name, salary)
+values ('8', 'Juan', '6100');
+insert into Employees (employee_id, name, salary)
+values ('9', 'Kannon', '7700');
 ```
 
 Table: Employees
@@ -226,12 +236,22 @@ order by employee_id;
 # 627. Swap Salary
 
 ```mysql
-Create table If Not Exists Salary (id int, name varchar(100), sex char(1), salary int);
+Create table If Not Exists Salary
+(
+    id     int,
+    name   varchar(100),
+    sex    char(1),
+    salary int
+);
 Truncate table Salary;
-insert into Salary (id, name, sex, salary) values ('1', 'A', 'm', '2500');
-insert into Salary (id, name, sex, salary) values ('2', 'B', 'f', '1500');
-insert into Salary (id, name, sex, salary) values ('3', 'C', 'm', '5500');
-insert into Salary (id, name, sex, salary) values ('4', 'D', 'f', '500');
+insert into Salary (id, name, sex, salary)
+values ('1', 'A', 'm', '2500');
+insert into Salary (id, name, sex, salary)
+values ('2', 'B', 'f', '1500');
+insert into Salary (id, name, sex, salary)
+values ('3', 'C', 'm', '5500');
+insert into Salary (id, name, sex, salary)
+values ('4', 'D', 'f', '500');
 ```
 
 Table: Salary
@@ -259,11 +279,18 @@ set sex =
 # 196. Delete Duplicate Emails
 
 ```mysql
-Create table If Not Exists Person (Id int, Email varchar(255));
+Create table If Not Exists Person
+(
+    Id    int,
+    Email varchar(255)
+);
 Truncate table Person;
-insert into Person (id, email) values ('1', 'john@example.com');
-insert into Person (id, email) values ('2', 'bob@example.com');
-insert into Person (id, email) values ('3', 'john@example.com');
+insert into Person (id, email)
+values ('1', 'john@example.com');
+insert into Person (id, email)
+values ('2', 'bob@example.com');
+insert into Person (id, email)
+values ('3', 'john@example.com');
 ```
 
 Table: Person
@@ -272,9 +299,11 @@ id is the primary key column for this table.
 
 Each row of this table contains an email. The emails will not contain uppercase letters.
 
-Write an SQL query to delete all the duplicate emails, keeping only one unique email with the smallest id. Note that you are supposed to write a DELETE statement and not a SELECT one.
+Write an SQL query to delete all the duplicate emails, keeping only one unique email with the smallest id. Note that you
+are supposed to write a DELETE statement and not a SELECT one.
 
-After running your script, the answer shown is the Person table. The driver will first compile and run your piece of code and then show the Person table. The final order of the Person table does not matter.
+After running your script, the answer shown is the Person table. The driver will first compile and run your piece of
+code and then show the Person table. The final order of the Person table does not matter.
 
 ```mysql
 delete p1
@@ -286,16 +315,21 @@ from person p1
 # 1667. Fix Names in a Table
 
 ```mysql
-Create table If Not Exists Users (user_id int, name varchar(40));
+Create table If Not Exists Users
+(
+    user_id int,
+    name    varchar(40)
+);
 Truncate table Users;
-insert into Users (user_id, name) values ('1', 'aLice');
-insert into Users (user_id, name) values ('2', 'bOB');
+insert into Users (user_id, name)
+values ('1', 'aLice');
+insert into Users (user_id, name)
+values ('2', 'bOB');
 ```
 
 user_id is the primary key for this table.
 
 This table contains the ID and the name of the user. The name consists of only lowercase and uppercase characters.
-
 
 Write an SQL query to fix the names so that only the first character is uppercase and the rest are lowercase.
 
@@ -311,15 +345,26 @@ order by user_id;
 # 1484. Group Sold Products By The Date
 
 ```mysql
-Create table If Not Exists Activities (sell_date date, product varchar(20));
+Create table If Not Exists Activities
+(
+    sell_date date,
+    product   varchar(20)
+);
 Truncate table Activities;
-insert into Activities (sell_date, product) values ('2020-05-30', 'Headphone');
-insert into Activities (sell_date, product) values ('2020-06-01', 'Pencil');
-insert into Activities (sell_date, product) values ('2020-06-02', 'Mask');
-insert into Activities (sell_date, product) values ('2020-05-30', 'Basketball');
-insert into Activities (sell_date, product) values ('2020-06-01', 'Bible');
-insert into Activities (sell_date, product) values ('2020-06-02', 'Mask');
-insert into Activities (sell_date, product) values ('2020-05-30', 'T-Shirt');
+insert into Activities (sell_date, product)
+values ('2020-05-30', 'Headphone');
+insert into Activities (sell_date, product)
+values ('2020-06-01', 'Pencil');
+insert into Activities (sell_date, product)
+values ('2020-06-02', 'Mask');
+insert into Activities (sell_date, product)
+values ('2020-05-30', 'Basketball');
+insert into Activities (sell_date, product)
+values ('2020-06-01', 'Bible');
+insert into Activities (sell_date, product)
+values ('2020-06-02', 'Mask');
+insert into Activities (sell_date, product)
+values ('2020-05-30', 'T-Shirt');
 ```
 
 Table Activities:
@@ -327,7 +372,6 @@ Table Activities:
 There is no primary key for this table, it may contain duplicates.
 
 Each row of this table contains the product name and the date it was sold in a market.
-
 
 Write an SQL query to find for each date the number of different products sold and their names.
 
@@ -337,7 +381,7 @@ Return the result table ordered by sell_date.
 
 ```mysql
 select sell_date,
-       count(distinct product) as num_sold,
+       count(distinct product)                                       as num_sold,
        group_concat(distinct product order by product separator ',') as products
 from activities
 group by sell_date
@@ -347,13 +391,23 @@ order by sell_date;
 # 1527. Patients With a Condition
 
 ```mysql
-Create table If Not Exists Patients (patient_id int, patient_name varchar(30), conditions varchar(100));
+Create table If Not Exists Patients
+(
+    patient_id   int,
+    patient_name varchar(30),
+    conditions   varchar(100)
+);
 Truncate table Patients;
-insert into Patients (patient_id, patient_name, conditions) values ('1', 'Daniel', 'YFEV COUGH');
-insert into Patients (patient_id, patient_name, conditions) values ('2', 'Alice', '');
-insert into Patients (patient_id, patient_name, conditions) values ('3', 'Bob', 'DIAB100 MYOP');
-insert into Patients (patient_id, patient_name, conditions) values ('4', 'George', 'ACNE DIAB100');
-insert into Patients (patient_id, patient_name, conditions) values ('5', 'Alain', 'DIAB201');
+insert into Patients (patient_id, patient_name, conditions)
+values ('1', 'Daniel', 'YFEV COUGH');
+insert into Patients (patient_id, patient_name, conditions)
+values ('2', 'Alice', '');
+insert into Patients (patient_id, patient_name, conditions)
+values ('3', 'Bob', 'DIAB100 MYOP');
+insert into Patients (patient_id, patient_name, conditions)
+values ('4', 'George', 'ACNE DIAB100');
+insert into Patients (patient_id, patient_name, conditions)
+values ('5', 'Alain', 'DIAB201');
 ```
 
 patient_id is the primary key for this table.
@@ -362,7 +416,8 @@ patient_id is the primary key for this table.
 
 This table contains information of the patients in the hospital.
 
-Write an SQL query to report the patient_id, patient_name and conditions of the patients who have Type I Diabetes. Type I Diabetes always starts with DIAB1 prefix.
+Write an SQL query to report the patient_id, patient_name and conditions of the patients who have Type I Diabetes. Type
+I Diabetes always starts with DIAB1 prefix.
 
 Return the result table in any order.
 
@@ -374,3 +429,167 @@ from patients
 where (conditions like '% DIAB1%' or conditions like 'DIAB1%');
 ```
 
+# 1965. Employees With Missing Information
+
+```mysql
+Create table If Not Exists Employees
+(
+    employee_id int,
+    name        varchar(30)
+);
+Create table If Not Exists Salaries
+(
+    employee_id int,
+    salary      int
+);
+Truncate table Employees;
+insert into Employees (employee_id, name)
+values ('2', 'Crew');
+insert into Employees (employee_id, name)
+values ('4', 'Haven');
+insert into Employees (employee_id, name)
+values ('5', 'Kristian');
+Truncate table Salaries;
+insert into Salaries (employee_id, salary)
+values ('5', '76071');
+insert into Salaries (employee_id, salary)
+values ('1', '22517');
+insert into Salaries (employee_id, salary)
+values ('4', '63539');
+```
+
+Table: Employees
+
+employee_id is the primary key for this table.
+
+Each row of this table indicates the name of the employee whose ID is employee_id.
+
+Table: Salaries
+
+employee_id is the primary key for this table.
+
+Each row of this table indicates the salary of the employee whose ID is employee_id.
+
+Write an SQL query to report the IDs of all the employees with missing information. The information of an employee is
+missing if:
+
+The employee's name is missing, or
+The employee's salary is missing.
+Return the result table ordered by employee_id in ascending order.
+
+```mysql
+select e.employee_id
+from employees e
+         left outer join salaries s
+                         on e.employee_id = s.employee_id
+where s.salary is null
+union
+select s.employee_id
+from employees e
+         right outer join salaries s
+                          on e.employee_id = s.employee_id
+where e.name is null
+order by employee_id;
+```
+
+# 1795. Rearrange Products Table
+
+```mysql
+Create table If Not Exists Products
+(
+    product_id int,
+    store1     int,
+    store2     int,
+    store3     int
+);
+Truncate table Products;
+insert into Products (product_id, store1, store2, store3)
+values ('0', '95', '100', '105');
+insert into Products (product_id, store1, store2, store3)
+values ('1', '70', 'None', '80');
+```
+
+Table: Products
+
+product_id is the primary key for this table.
+
+Each row in this table indicates the product's price in 3 different stores: store1, store2, and store3.
+
+If the product is not available in a store, the price will be null in that store's column.
+
+Write an SQL query to rearrange the Products table so that each row has (product_id, store, price). If a product is not
+available in a store, do not include a row with that product_id and store combination in the result table.
+
+Return the result table in any order.
+
+```mysql
+select product_id, 'store1' as store, store1 as price
+from products
+where store1 is not null
+union
+select product_id, 'store2' as store, store2 as price
+from products
+where store2 is not null
+union
+select product_id, 'store3' as store, store3 as price
+from products
+where store3 is not null;
+```
+
+# 608. Tree Node
+
+```mysql
+Create table If Not Exists Tree
+(
+    id   int,
+    p_id int
+);
+Truncate table Tree;
+insert into Tree (id, p_id)
+values ('1', 'None');
+insert into Tree (id, p_id)
+values ('2', '1');
+insert into Tree (id, p_id)
+values ('3', '1');
+insert into Tree (id, p_id)
+values ('4', '2');
+insert into Tree (id, p_id)
+values ('5', '2');
+```
+
+Table: Tree
+
+id is the primary key column for this table.
+
+Each row of this table contains information about the id of a node and the id of its parent node in a tree.
+
+The given structure is always a valid tree.
+
+Each node in the tree can be one of three types:
+
+"Leaf": if the node is a leaf node.
+
+"Root": if the node is the root of the tree.
+
+"Inner": If the node is neither a leaf node nor a root node.
+
+Write an SQL query to report the type of each node in the tree.
+
+Return the result table in any order.
+
+```mysql
+select t.id,
+       if(t.p_id is null,
+          'Root', if(t.id in (select t.p_id from tree t), 'Inner', 'Leaf')) as type
+from tree t;
+```
+
+# 176. Second Highest Salary
+
+```mysql
+select (select distinct salary
+        from employee
+        order by salary desc
+        limit 1 offset 1) as SecondHighestSalary
+;
+```
