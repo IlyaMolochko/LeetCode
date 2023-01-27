@@ -593,3 +593,94 @@ select (select distinct salary
         limit 1 offset 1) as SecondHighestSalary
 ;
 ```
+
+# 175. Combine Two Tables
+
+```mysql
+Create table If Not Exists Person (personId int, firstName varchar(255), lastName varchar(255));
+Create table If Not Exists Address (addressId int, personId int, city varchar(255), state varchar(255));
+Truncate table Person;
+insert into Person (personId, lastName, firstName) values ('1', 'Wang', 'Allen');
+insert into Person (personId, lastName, firstName) values ('2', 'Alice', 'Bob');
+Truncate table Address;
+insert into Address (addressId, personId, city, state) values ('1', '2', 'New York City', 'New York');
+insert into Address (addressId, personId, city, state) values ('2', '3', 'Leetcode', 'California');
+```
+
+Write an SQL query to report the first name, last name, city, and state of each person in the Person table. If the address of a personId is not present in the Address table, report null instead.
+
+Return the result table in any order.
+
+```mysql
+select 
+        p.firstname,
+        p.lastname,
+        a.city,
+        a.state
+from 
+        Person p
+left outer join 
+        Address a
+on 
+    p.personId = a.personId;
+```
+
+# 1581. Customer Who Visited but Did Not Make Any Transactions
+
+```mysql
+Create table If Not Exists Visits(visit_id int, customer_id int);
+Create table If Not Exists Transactions(transaction_id int, visit_id int, amount int);
+Truncate table Visits;
+insert into Visits (visit_id, customer_id) values ('1', '23');
+insert into Visits (visit_id, customer_id) values ('2', '9');
+insert into Visits (visit_id, customer_id) values ('4', '30');
+insert into Visits (visit_id, customer_id) values ('5', '54');
+insert into Visits (visit_id, customer_id) values ('6', '96');
+insert into Visits (visit_id, customer_id) values ('7', '54');
+insert into Visits (visit_id, customer_id) values ('8', '54');
+Truncate table Transactions;
+insert into Transactions (transaction_id, visit_id, amount) values ('2', '5', '310');
+insert into Transactions (transaction_id, visit_id, amount) values ('3', '5', '300');
+insert into Transactions (transaction_id, visit_id, amount) values ('9', '5', '200');
+insert into Transactions (transaction_id, visit_id, amount) values ('12', '1', '910');
+insert into Transactions (transaction_id, visit_id, amount) values ('13', '2', '970');
+```
+
+Write a SQL query to find the IDs of the users who visited without making any transactions and the number of times they made these types of visits.
+
+Return the result table sorted in any order.
+
+```mysql
+select v.customer_id,
+       count(v.customer_id) as count_no_trans
+from visits v
+left outer join transactions t
+on v.visit_id = t.visit_id
+where transaction_id is null
+group by v.customer_id;
+```
+
+# 1148. Article Views I
+
+```mysql
+Create table If Not Exists Views (article_id int, author_id int, viewer_id int, view_date date);
+Truncate table Views;
+insert into Views (article_id, author_id, viewer_id, view_date) values ('1', '3', '5', '2019-08-01');
+insert into Views (article_id, author_id, viewer_id, view_date) values ('1', '3', '6', '2019-08-02');
+insert into Views (article_id, author_id, viewer_id, view_date) values ('2', '7', '7', '2019-08-01');
+insert into Views (article_id, author_id, viewer_id, view_date) values ('2', '7', '6', '2019-08-02');
+insert into Views (article_id, author_id, viewer_id, view_date) values ('4', '7', '1', '2019-07-22');
+insert into Views (article_id, author_id, viewer_id, view_date) values ('3', '4', '4', '2019-07-21');
+insert into Views (article_id, author_id, viewer_id, view_date) values ('3', '4', '4', '2019-07-21');
+```
+
+Write an SQL query to find all the authors that viewed at least one of their own articles.
+
+Return the result table sorted by id in ascending order.
+
+```mysql
+select distinct(author_id) as id
+from views
+where author_id = viewer_id
+order by id;
+```
