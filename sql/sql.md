@@ -684,3 +684,76 @@ from views
 where author_id = viewer_id
 order by id;
 ```
+
+# 197. Rising Temperature
+
+```mysql
+Create table If Not Exists Weather (id int, recordDate date, temperature int);
+Truncate table Weather;
+insert into Weather (id, recordDate, temperature) values ('1', '2015-01-01', '10');
+insert into Weather (id, recordDate, temperature) values ('2', '2015-01-02', '25');
+insert into Weather (id, recordDate, temperature) values ('3', '2015-01-03', '20');
+insert into Weather (id, recordDate, temperature) values ('4', '2015-01-04', '30');
+```
+
+Table: Weather
+
+Write an SQL query to find all dates' Id with higher temperatures compared to its previous dates (yesterday).
+
+Return the result table in any order.
+
+```mysql
+select t1.id as Id
+from weather t1
+         inner join weather t2
+                    on datediff(t1.recordDate, t2.recordDate) = 1
+                        and t1.temperature > t2.temperature;
+```
+
+# 
+
+```mysql
+Create table If Not Exists SalesPerson (sales_id int, name varchar(255), salary int, commission_rate int, hire_date date);
+Create table If Not Exists Company (com_id int, name varchar(255), city varchar(255));
+Create table If Not Exists Orders (order_id int, order_date date, com_id int, sales_id int, amount int);
+insert into SalesPerson (sales_id, name, salary, commission_rate, hire_date) values ('1', 'John', '100000', '6', '4/1/2006');
+insert into SalesPerson (sales_id, name, salary, commission_rate, hire_date) values ('2', 'Amy', '12000', '5', '5/1/2010');
+insert into SalesPerson (sales_id, name, salary, commission_rate, hire_date) values ('3', 'Mark', '65000', '12', '12/25/2008');
+insert into SalesPerson (sales_id, name, salary, commission_rate, hire_date) values ('4', 'Pam', '25000', '25', '1/1/2005');
+insert into SalesPerson (sales_id, name, salary, commission_rate, hire_date) values ('5', 'Alex', '5000', '10', '2/3/2007');
+insert into Company (com_id, name, city) values ('1', 'RED', 'Boston');
+insert into Company (com_id, name, city) values ('2', 'ORANGE', 'New York');
+insert into Company (com_id, name, city) values ('3', 'YELLOW', 'Boston');
+insert into Company (com_id, name, city) values ('4', 'GREEN', 'Austin');
+insert into Orders (order_id, order_date, com_id, sales_id, amount) values ('1', '1/1/2014', '3', '4', '10000');
+insert into Orders (order_id, order_date, com_id, sales_id, amount) values ('2', '2/1/2014', '4', '5', '5000');
+insert into Orders (order_id, order_date, com_id, sales_id, amount) values ('3', '3/1/2014', '1', '1', '50000');
+insert into Orders (order_id, order_date, com_id, sales_id, amount) values ('4', '4/1/2014', '1', '4', '25000');
+```
+
+Table: SalesPerson
+
+Table: Company
+
+Table: Orders
+
+Write an SQL query to report the names of all the salespersons who did not have any orders related to the company with the name "RED".
+
+Return the result table in any order.
+
+```mysql
+with orders_with_red as (
+    select o.sales_id
+    from orders o
+    inner join company c
+    on o.com_id = c.com_id
+    where c.name = 'RED'
+)
+select s.name
+from SalesPerson s
+left join 
+orders_with_red o
+on s.sales_id = o.sales_id
+where o.sales_id is null;
+```
+
