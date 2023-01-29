@@ -757,3 +757,81 @@ on s.sales_id = o.sales_id
 where o.sales_id is null;
 ```
 
+# User Activity for the Past 30 Days I
+
+```mysql
+Create table If Not Exists Activity (user_id int, session_id int, activity_date date, activity_type ENUM('open_session', 'end_session', 'scroll_down', 'send_message'));
+Truncate table Activity;
+insert into Activity (user_id, session_id, activity_date, activity_type) values ('1', '1', '2019-07-20', 'open_session');
+insert into Activity (user_id, session_id, activity_date, activity_type) values ('1', '1', '2019-07-20', 'scroll_down');
+insert into Activity (user_id, session_id, activity_date, activity_type) values ('1', '1', '2019-07-20', 'end_session');
+insert into Activity (user_id, session_id, activity_date, activity_type) values ('2', '4', '2019-07-20', 'open_session');
+insert into Activity (user_id, session_id, activity_date, activity_type) values ('2', '4', '2019-07-21', 'send_message');
+insert into Activity (user_id, session_id, activity_date, activity_type) values ('2', '4', '2019-07-21', 'end_session');
+insert into Activity (user_id, session_id, activity_date, activity_type) values ('3', '2', '2019-07-21', 'open_session');
+insert into Activity (user_id, session_id, activity_date, activity_type) values ('3', '2', '2019-07-21', 'send_message');
+insert into Activity (user_id, session_id, activity_date, activity_type) values ('3', '2', '2019-07-21', 'end_session');
+insert into Activity (user_id, session_id, activity_date, activity_type) values ('4', '3', '2019-06-25', 'open_session');
+insert into Activity (user_id, session_id, activity_date, activity_type) values ('4', '3', '2019-06-25', 'end_session');
+```
+
+Table: Activity
+
+```mysql
+select t.activity_date as day,
+       count(distinct t.user_id) as active_users
+from activity t
+where datediff('2019-07-27', t.activity_date) >= 0
+and datediff('2019-07-27', t.activity_date) < 30
+group by t.activity_date;
+```
+
+# 1693. Daily Leads and Partners
+
+```mysql
+Create table If Not Exists DailySales(date_id date, make_name varchar(20), lead_id int, partner_id int);
+Truncate table DailySales;
+insert into DailySales (date_id, make_name, lead_id, partner_id) values ('2020-12-8', 'toyota', '0', '1');
+insert into DailySales (date_id, make_name, lead_id, partner_id) values ('2020-12-8', 'toyota', '1', '0');
+insert into DailySales (date_id, make_name, lead_id, partner_id) values ('2020-12-8', 'toyota', '1', '2');
+insert into DailySales (date_id, make_name, lead_id, partner_id) values ('2020-12-7', 'toyota', '0', '2');
+insert into DailySales (date_id, make_name, lead_id, partner_id) values ('2020-12-7', 'toyota', '0', '1');
+insert into DailySales (date_id, make_name, lead_id, partner_id) values ('2020-12-8', 'honda', '1', '2');
+insert into DailySales (date_id, make_name, lead_id, partner_id) values ('2020-12-8', 'honda', '2', '1');
+insert into DailySales (date_id, make_name, lead_id, partner_id) values ('2020-12-7', 'honda', '0', '1');
+insert into DailySales (date_id, make_name, lead_id, partner_id) values ('2020-12-7', 'honda', '1', '2');
+insert into DailySales (date_id, make_name, lead_id, partner_id) values ('2020-12-7', 'honda', '2', '1');
+```
+
+Table: DailySales
+
+```mysql
+select t.date_id,
+       t.make_name,
+       count(distinct t.lead_id) as unique_leads,
+       count(distinct t.partner_id) as unique_partners
+from DailySales t
+group by t.date_id,
+       t.make_name;
+```
+
+# 1729. Find Followers Count
+
+```mysql
+Create table If Not Exists Followers(user_id int, follower_id int);
+Truncate table Followers;
+insert into Followers (user_id, follower_id) values ('0', '1');
+insert into Followers (user_id, follower_id) values ('1', '0');
+insert into Followers (user_id, follower_id) values ('2', '0');
+insert into Followers (user_id, follower_id) values ('2', '1');
+```
+
+Table: Followers
+
+```mysql
+select t.user_id,
+       count(t.user_id) as followers_count
+from followers t
+group by t.user_id
+order by t.user_id;
+```
