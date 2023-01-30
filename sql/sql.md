@@ -597,56 +597,92 @@ select (select distinct salary
 # 175. Combine Two Tables
 
 ```mysql
-Create table If Not Exists Person (personId int, firstName varchar(255), lastName varchar(255));
-Create table If Not Exists Address (addressId int, personId int, city varchar(255), state varchar(255));
+Create table If Not Exists Person
+(
+    personId  int,
+    firstName varchar(255),
+    lastName  varchar(255)
+);
+Create table If Not Exists Address
+(
+    addressId int,
+    personId  int,
+    city      varchar(255),
+    state     varchar(255)
+);
 Truncate table Person;
-insert into Person (personId, lastName, firstName) values ('1', 'Wang', 'Allen');
-insert into Person (personId, lastName, firstName) values ('2', 'Alice', 'Bob');
+insert into Person (personId, lastName, firstName)
+values ('1', 'Wang', 'Allen');
+insert into Person (personId, lastName, firstName)
+values ('2', 'Alice', 'Bob');
 Truncate table Address;
-insert into Address (addressId, personId, city, state) values ('1', '2', 'New York City', 'New York');
-insert into Address (addressId, personId, city, state) values ('2', '3', 'Leetcode', 'California');
+insert into Address (addressId, personId, city, state)
+values ('1', '2', 'New York City', 'New York');
+insert into Address (addressId, personId, city, state)
+values ('2', '3', 'Leetcode', 'California');
 ```
 
-Write an SQL query to report the first name, last name, city, and state of each person in the Person table. If the address of a personId is not present in the Address table, report null instead.
+Write an SQL query to report the first name, last name, city, and state of each person in the Person table. If the
+address of a personId is not present in the Address table, report null instead.
 
 Return the result table in any order.
 
 ```mysql
-select 
-        p.firstname,
-        p.lastname,
-        a.city,
-        a.state
-from 
-        Person p
-left outer join 
-        Address a
-on 
-    p.personId = a.personId;
+select p.firstname,
+       p.lastname,
+       a.city,
+       a.state
+from Person p
+         left outer join
+     Address a
+     on
+         p.personId = a.personId;
 ```
 
 # 1581. Customer Who Visited but Did Not Make Any Transactions
 
 ```mysql
-Create table If Not Exists Visits(visit_id int, customer_id int);
-Create table If Not Exists Transactions(transaction_id int, visit_id int, amount int);
+Create table If Not Exists Visits
+(
+    visit_id    int,
+    customer_id int
+);
+Create table If Not Exists Transactions
+(
+    transaction_id int,
+    visit_id       int,
+    amount         int
+);
 Truncate table Visits;
-insert into Visits (visit_id, customer_id) values ('1', '23');
-insert into Visits (visit_id, customer_id) values ('2', '9');
-insert into Visits (visit_id, customer_id) values ('4', '30');
-insert into Visits (visit_id, customer_id) values ('5', '54');
-insert into Visits (visit_id, customer_id) values ('6', '96');
-insert into Visits (visit_id, customer_id) values ('7', '54');
-insert into Visits (visit_id, customer_id) values ('8', '54');
+insert into Visits (visit_id, customer_id)
+values ('1', '23');
+insert into Visits (visit_id, customer_id)
+values ('2', '9');
+insert into Visits (visit_id, customer_id)
+values ('4', '30');
+insert into Visits (visit_id, customer_id)
+values ('5', '54');
+insert into Visits (visit_id, customer_id)
+values ('6', '96');
+insert into Visits (visit_id, customer_id)
+values ('7', '54');
+insert into Visits (visit_id, customer_id)
+values ('8', '54');
 Truncate table Transactions;
-insert into Transactions (transaction_id, visit_id, amount) values ('2', '5', '310');
-insert into Transactions (transaction_id, visit_id, amount) values ('3', '5', '300');
-insert into Transactions (transaction_id, visit_id, amount) values ('9', '5', '200');
-insert into Transactions (transaction_id, visit_id, amount) values ('12', '1', '910');
-insert into Transactions (transaction_id, visit_id, amount) values ('13', '2', '970');
+insert into Transactions (transaction_id, visit_id, amount)
+values ('2', '5', '310');
+insert into Transactions (transaction_id, visit_id, amount)
+values ('3', '5', '300');
+insert into Transactions (transaction_id, visit_id, amount)
+values ('9', '5', '200');
+insert into Transactions (transaction_id, visit_id, amount)
+values ('12', '1', '910');
+insert into Transactions (transaction_id, visit_id, amount)
+values ('13', '2', '970');
 ```
 
-Write a SQL query to find the IDs of the users who visited without making any transactions and the number of times they made these types of visits.
+Write a SQL query to find the IDs of the users who visited without making any transactions and the number of times they
+made these types of visits.
 
 Return the result table sorted in any order.
 
@@ -654,8 +690,8 @@ Return the result table sorted in any order.
 select v.customer_id,
        count(v.customer_id) as count_no_trans
 from visits v
-left outer join transactions t
-on v.visit_id = t.visit_id
+         left outer join transactions t
+                         on v.visit_id = t.visit_id
 where transaction_id is null
 group by v.customer_id;
 ```
@@ -663,15 +699,28 @@ group by v.customer_id;
 # 1148. Article Views I
 
 ```mysql
-Create table If Not Exists Views (article_id int, author_id int, viewer_id int, view_date date);
+Create table If Not Exists Views
+(
+    article_id int,
+    author_id  int,
+    viewer_id  int,
+    view_date  date
+);
 Truncate table Views;
-insert into Views (article_id, author_id, viewer_id, view_date) values ('1', '3', '5', '2019-08-01');
-insert into Views (article_id, author_id, viewer_id, view_date) values ('1', '3', '6', '2019-08-02');
-insert into Views (article_id, author_id, viewer_id, view_date) values ('2', '7', '7', '2019-08-01');
-insert into Views (article_id, author_id, viewer_id, view_date) values ('2', '7', '6', '2019-08-02');
-insert into Views (article_id, author_id, viewer_id, view_date) values ('4', '7', '1', '2019-07-22');
-insert into Views (article_id, author_id, viewer_id, view_date) values ('3', '4', '4', '2019-07-21');
-insert into Views (article_id, author_id, viewer_id, view_date) values ('3', '4', '4', '2019-07-21');
+insert into Views (article_id, author_id, viewer_id, view_date)
+values ('1', '3', '5', '2019-08-01');
+insert into Views (article_id, author_id, viewer_id, view_date)
+values ('1', '3', '6', '2019-08-02');
+insert into Views (article_id, author_id, viewer_id, view_date)
+values ('2', '7', '7', '2019-08-01');
+insert into Views (article_id, author_id, viewer_id, view_date)
+values ('2', '7', '6', '2019-08-02');
+insert into Views (article_id, author_id, viewer_id, view_date)
+values ('4', '7', '1', '2019-07-22');
+insert into Views (article_id, author_id, viewer_id, view_date)
+values ('3', '4', '4', '2019-07-21');
+insert into Views (article_id, author_id, viewer_id, view_date)
+values ('3', '4', '4', '2019-07-21');
 ```
 
 Write an SQL query to find all the authors that viewed at least one of their own articles.
@@ -688,12 +737,21 @@ order by id;
 # 197. Rising Temperature
 
 ```mysql
-Create table If Not Exists Weather (id int, recordDate date, temperature int);
+Create table If Not Exists Weather
+(
+    id          int,
+    recordDate  date,
+    temperature int
+);
 Truncate table Weather;
-insert into Weather (id, recordDate, temperature) values ('1', '2015-01-01', '10');
-insert into Weather (id, recordDate, temperature) values ('2', '2015-01-02', '25');
-insert into Weather (id, recordDate, temperature) values ('3', '2015-01-03', '20');
-insert into Weather (id, recordDate, temperature) values ('4', '2015-01-04', '30');
+insert into Weather (id, recordDate, temperature)
+values ('1', '2015-01-01', '10');
+insert into Weather (id, recordDate, temperature)
+values ('2', '2015-01-02', '25');
+insert into Weather (id, recordDate, temperature)
+values ('3', '2015-01-03', '20');
+insert into Weather (id, recordDate, temperature)
+values ('4', '2015-01-04', '30');
 ```
 
 Table: Weather
@@ -710,25 +768,57 @@ from weather t1
                         and t1.temperature > t2.temperature;
 ```
 
-# 
+#  
 
 ```mysql
-Create table If Not Exists SalesPerson (sales_id int, name varchar(255), salary int, commission_rate int, hire_date date);
-Create table If Not Exists Company (com_id int, name varchar(255), city varchar(255));
-Create table If Not Exists Orders (order_id int, order_date date, com_id int, sales_id int, amount int);
-insert into SalesPerson (sales_id, name, salary, commission_rate, hire_date) values ('1', 'John', '100000', '6', '4/1/2006');
-insert into SalesPerson (sales_id, name, salary, commission_rate, hire_date) values ('2', 'Amy', '12000', '5', '5/1/2010');
-insert into SalesPerson (sales_id, name, salary, commission_rate, hire_date) values ('3', 'Mark', '65000', '12', '12/25/2008');
-insert into SalesPerson (sales_id, name, salary, commission_rate, hire_date) values ('4', 'Pam', '25000', '25', '1/1/2005');
-insert into SalesPerson (sales_id, name, salary, commission_rate, hire_date) values ('5', 'Alex', '5000', '10', '2/3/2007');
-insert into Company (com_id, name, city) values ('1', 'RED', 'Boston');
-insert into Company (com_id, name, city) values ('2', 'ORANGE', 'New York');
-insert into Company (com_id, name, city) values ('3', 'YELLOW', 'Boston');
-insert into Company (com_id, name, city) values ('4', 'GREEN', 'Austin');
-insert into Orders (order_id, order_date, com_id, sales_id, amount) values ('1', '1/1/2014', '3', '4', '10000');
-insert into Orders (order_id, order_date, com_id, sales_id, amount) values ('2', '2/1/2014', '4', '5', '5000');
-insert into Orders (order_id, order_date, com_id, sales_id, amount) values ('3', '3/1/2014', '1', '1', '50000');
-insert into Orders (order_id, order_date, com_id, sales_id, amount) values ('4', '4/1/2014', '1', '4', '25000');
+Create table If Not Exists SalesPerson
+(
+    sales_id        int,
+    name            varchar(255),
+    salary          int,
+    commission_rate int,
+    hire_date       date
+);
+Create table If Not Exists Company
+(
+    com_id int,
+    name   varchar(255),
+    city   varchar(255)
+);
+Create table If Not Exists Orders
+(
+    order_id   int,
+    order_date date,
+    com_id     int,
+    sales_id   int,
+    amount     int
+);
+insert into SalesPerson (sales_id, name, salary, commission_rate, hire_date)
+values ('1', 'John', '100000', '6', '4/1/2006');
+insert into SalesPerson (sales_id, name, salary, commission_rate, hire_date)
+values ('2', 'Amy', '12000', '5', '5/1/2010');
+insert into SalesPerson (sales_id, name, salary, commission_rate, hire_date)
+values ('3', 'Mark', '65000', '12', '12/25/2008');
+insert into SalesPerson (sales_id, name, salary, commission_rate, hire_date)
+values ('4', 'Pam', '25000', '25', '1/1/2005');
+insert into SalesPerson (sales_id, name, salary, commission_rate, hire_date)
+values ('5', 'Alex', '5000', '10', '2/3/2007');
+insert into Company (com_id, name, city)
+values ('1', 'RED', 'Boston');
+insert into Company (com_id, name, city)
+values ('2', 'ORANGE', 'New York');
+insert into Company (com_id, name, city)
+values ('3', 'YELLOW', 'Boston');
+insert into Company (com_id, name, city)
+values ('4', 'GREEN', 'Austin');
+insert into Orders (order_id, order_date, com_id, sales_id, amount)
+values ('1', '1/1/2014', '3', '4', '10000');
+insert into Orders (order_id, order_date, com_id, sales_id, amount)
+values ('2', '2/1/2014', '4', '5', '5000');
+insert into Orders (order_id, order_date, com_id, sales_id, amount)
+values ('3', '3/1/2014', '1', '1', '50000');
+insert into Orders (order_id, order_date, com_id, sales_id, amount)
+values ('4', '4/1/2014', '1', '4', '25000');
 ```
 
 Table: SalesPerson
@@ -737,70 +827,102 @@ Table: Company
 
 Table: Orders
 
-Write an SQL query to report the names of all the salespersons who did not have any orders related to the company with the name "RED".
+Write an SQL query to report the names of all the salespersons who did not have any orders related to the company with
+the name "RED".
 
 Return the result table in any order.
 
 ```mysql
-with orders_with_red as (
-    select o.sales_id
-    from orders o
-    inner join company c
-    on o.com_id = c.com_id
-    where c.name = 'RED'
-)
+with orders_with_red as (select o.sales_id
+                         from orders o
+                                  inner join company c
+                                             on o.com_id = c.com_id
+                         where c.name = 'RED')
 select s.name
 from SalesPerson s
-left join 
-orders_with_red o
-on s.sales_id = o.sales_id
+         left join
+     orders_with_red o
+     on s.sales_id = o.sales_id
 where o.sales_id is null;
 ```
 
 # User Activity for the Past 30 Days I
 
 ```mysql
-Create table If Not Exists Activity (user_id int, session_id int, activity_date date, activity_type ENUM('open_session', 'end_session', 'scroll_down', 'send_message'));
+Create table If Not Exists Activity
+(
+    user_id       int,
+    session_id    int,
+    activity_date date,
+    activity_type ENUM ('open_session', 'end_session', 'scroll_down', 'send_message')
+);
 Truncate table Activity;
-insert into Activity (user_id, session_id, activity_date, activity_type) values ('1', '1', '2019-07-20', 'open_session');
-insert into Activity (user_id, session_id, activity_date, activity_type) values ('1', '1', '2019-07-20', 'scroll_down');
-insert into Activity (user_id, session_id, activity_date, activity_type) values ('1', '1', '2019-07-20', 'end_session');
-insert into Activity (user_id, session_id, activity_date, activity_type) values ('2', '4', '2019-07-20', 'open_session');
-insert into Activity (user_id, session_id, activity_date, activity_type) values ('2', '4', '2019-07-21', 'send_message');
-insert into Activity (user_id, session_id, activity_date, activity_type) values ('2', '4', '2019-07-21', 'end_session');
-insert into Activity (user_id, session_id, activity_date, activity_type) values ('3', '2', '2019-07-21', 'open_session');
-insert into Activity (user_id, session_id, activity_date, activity_type) values ('3', '2', '2019-07-21', 'send_message');
-insert into Activity (user_id, session_id, activity_date, activity_type) values ('3', '2', '2019-07-21', 'end_session');
-insert into Activity (user_id, session_id, activity_date, activity_type) values ('4', '3', '2019-06-25', 'open_session');
-insert into Activity (user_id, session_id, activity_date, activity_type) values ('4', '3', '2019-06-25', 'end_session');
+insert into Activity (user_id, session_id, activity_date, activity_type)
+values ('1', '1', '2019-07-20', 'open_session');
+insert into Activity (user_id, session_id, activity_date, activity_type)
+values ('1', '1', '2019-07-20', 'scroll_down');
+insert into Activity (user_id, session_id, activity_date, activity_type)
+values ('1', '1', '2019-07-20', 'end_session');
+insert into Activity (user_id, session_id, activity_date, activity_type)
+values ('2', '4', '2019-07-20', 'open_session');
+insert into Activity (user_id, session_id, activity_date, activity_type)
+values ('2', '4', '2019-07-21', 'send_message');
+insert into Activity (user_id, session_id, activity_date, activity_type)
+values ('2', '4', '2019-07-21', 'end_session');
+insert into Activity (user_id, session_id, activity_date, activity_type)
+values ('3', '2', '2019-07-21', 'open_session');
+insert into Activity (user_id, session_id, activity_date, activity_type)
+values ('3', '2', '2019-07-21', 'send_message');
+insert into Activity (user_id, session_id, activity_date, activity_type)
+values ('3', '2', '2019-07-21', 'end_session');
+insert into Activity (user_id, session_id, activity_date, activity_type)
+values ('4', '3', '2019-06-25', 'open_session');
+insert into Activity (user_id, session_id, activity_date, activity_type)
+values ('4', '3', '2019-06-25', 'end_session');
 ```
 
 Table: Activity
 
 ```mysql
-select t.activity_date as day,
+select t.activity_date           as day,
        count(distinct t.user_id) as active_users
 from activity t
 where datediff('2019-07-27', t.activity_date) >= 0
-and datediff('2019-07-27', t.activity_date) < 30
+  and datediff('2019-07-27', t.activity_date) < 30
 group by t.activity_date;
 ```
 
 # 1693. Daily Leads and Partners
 
 ```mysql
-Create table If Not Exists DailySales(date_id date, make_name varchar(20), lead_id int, partner_id int);
+Create table If Not Exists DailySales
+(
+    date_id    date,
+    make_name  varchar(20),
+    lead_id    int,
+    partner_id int
+);
 Truncate table DailySales;
-insert into DailySales (date_id, make_name, lead_id, partner_id) values ('2020-12-8', 'toyota', '0', '1');
-insert into DailySales (date_id, make_name, lead_id, partner_id) values ('2020-12-8', 'toyota', '1', '0');
-insert into DailySales (date_id, make_name, lead_id, partner_id) values ('2020-12-8', 'toyota', '1', '2');
-insert into DailySales (date_id, make_name, lead_id, partner_id) values ('2020-12-7', 'toyota', '0', '2');
-insert into DailySales (date_id, make_name, lead_id, partner_id) values ('2020-12-7', 'toyota', '0', '1');
-insert into DailySales (date_id, make_name, lead_id, partner_id) values ('2020-12-8', 'honda', '1', '2');
-insert into DailySales (date_id, make_name, lead_id, partner_id) values ('2020-12-8', 'honda', '2', '1');
-insert into DailySales (date_id, make_name, lead_id, partner_id) values ('2020-12-7', 'honda', '0', '1');
-insert into DailySales (date_id, make_name, lead_id, partner_id) values ('2020-12-7', 'honda', '1', '2');
-insert into DailySales (date_id, make_name, lead_id, partner_id) values ('2020-12-7', 'honda', '2', '1');
+insert into DailySales (date_id, make_name, lead_id, partner_id)
+values ('2020-12-8', 'toyota', '0', '1');
+insert into DailySales (date_id, make_name, lead_id, partner_id)
+values ('2020-12-8', 'toyota', '1', '0');
+insert into DailySales (date_id, make_name, lead_id, partner_id)
+values ('2020-12-8', 'toyota', '1', '2');
+insert into DailySales (date_id, make_name, lead_id, partner_id)
+values ('2020-12-7', 'toyota', '0', '2');
+insert into DailySales (date_id, make_name, lead_id, partner_id)
+values ('2020-12-7', 'toyota', '0', '1');
+insert into DailySales (date_id, make_name, lead_id, partner_id)
+values ('2020-12-8', 'honda', '1', '2');
+insert into DailySales (date_id, make_name, lead_id, partner_id)
+values ('2020-12-8', 'honda', '2', '1');
+insert into DailySales (date_id, make_name, lead_id, partner_id)
+values ('2020-12-7', 'honda', '0', '1');
+insert into DailySales (date_id, make_name, lead_id, partner_id)
+values ('2020-12-7', 'honda', '1', '2');
+insert into DailySales (date_id, make_name, lead_id, partner_id)
+values ('2020-12-7', 'honda', '2', '1');
 ```
 
 Table: DailySales
@@ -808,22 +930,30 @@ Table: DailySales
 ```mysql
 select t.date_id,
        t.make_name,
-       count(distinct t.lead_id) as unique_leads,
+       count(distinct t.lead_id)    as unique_leads,
        count(distinct t.partner_id) as unique_partners
 from DailySales t
 group by t.date_id,
-       t.make_name;
+         t.make_name;
 ```
 
 # 1729. Find Followers Count
 
 ```mysql
-Create table If Not Exists Followers(user_id int, follower_id int);
+Create table If Not Exists Followers
+(
+    user_id     int,
+    follower_id int
+);
 Truncate table Followers;
-insert into Followers (user_id, follower_id) values ('0', '1');
-insert into Followers (user_id, follower_id) values ('1', '0');
-insert into Followers (user_id, follower_id) values ('2', '0');
-insert into Followers (user_id, follower_id) values ('2', '1');
+insert into Followers (user_id, follower_id)
+values ('0', '1');
+insert into Followers (user_id, follower_id)
+values ('1', '0');
+insert into Followers (user_id, follower_id)
+values ('2', '0');
+insert into Followers (user_id, follower_id)
+values ('2', '1');
 ```
 
 Table: Followers
@@ -835,3 +965,157 @@ from followers t
 group by t.user_id
 order by t.user_id;
 ```
+
+# 586. Customer Placing the Largest Number of Orders
+
+```mysql
+Create table If Not Exists orders
+(
+    order_number    int,
+    customer_number int
+);
+Truncate table orders;
+insert into orders (order_number, customer_number)
+values ('1', '1');
+insert into orders (order_number, customer_number)
+values ('2', '2');
+insert into orders (order_number, customer_number)
+values ('3', '3');
+insert into orders (order_number, customer_number)
+values ('4', '3');
+```
+
+Table: Orders
+
+Write an SQL query to find the customer_number for the customer who has placed the largest number of orders.
+
+The test cases are generated so that exactly one customer will have placed more orders than any other customer.
+
+```mysql
+select t.customer_number
+from orders t
+group by t.customer_number
+order by count(*) desc
+limit 1;
+```
+
+# 511. Game Play Analysis I
+
+```mysql
+Create table If Not Exists Activity
+(
+    player_id    int,
+    device_id    int,
+    event_date   date,
+    games_played int
+);
+Truncate table Activity;
+insert into Activity (player_id, device_id, event_date, games_played)
+values ('1', '2', '2016-03-01', '5');
+insert into Activity (player_id, device_id, event_date, games_played)
+values ('1', '2', '2016-05-02', '6');
+insert into Activity (player_id, device_id, event_date, games_played)
+values ('2', '3', '2017-06-25', '1');
+insert into Activity (player_id, device_id, event_date, games_played)
+values ('3', '1', '2016-03-02', '0');
+insert into Activity (player_id, device_id, event_date, games_played)
+values ('3', '4', '2018-07-03', '5');
+```
+
+Table: Activity
+
+Write an SQL query to report the first login date for each player.
+
+Return the result table in any order.
+
+```mysql
+select t.player_id,
+       min(t.event_date) as first_login
+from activity t
+group by t.player_id;
+```
+
+# 1890. The Latest Login in 2020
+
+```mysql
+Create table If Not Exists Logins
+(
+    user_id    int,
+    time_stamp datetime
+);
+Truncate table Logins;
+insert into Logins (user_id, time_stamp)
+values ('6', '2020-06-30 15:06:07');
+insert into Logins (user_id, time_stamp)
+values ('6', '2021-04-21 14:06:06');
+insert into Logins (user_id, time_stamp)
+values ('6', '2019-03-07 00:18:15');
+insert into Logins (user_id, time_stamp)
+values ('8', '2020-02-01 05:10:53');
+insert into Logins (user_id, time_stamp)
+values ('8', '2020-12-30 00:46:50');
+insert into Logins (user_id, time_stamp)
+values ('2', '2020-01-16 02:49:50');
+insert into Logins (user_id, time_stamp)
+values ('2', '2019-08-25 07:59:08');
+insert into Logins (user_id, time_stamp)
+values ('14', '2019-07-14 09:00:00');
+insert into Logins (user_id, time_stamp)
+values ('14', '2021-01-06 11:59:59');
+```
+
+Table: Logins
+
+Write an SQL query to report the latest login for all users in the year 2020. Do not include the users who did not login
+in 2020.
+
+Return the result table in any order.
+
+```mysql
+select t.user_id,
+       max(t.time_stamp) as last_stamp
+from logins t
+where year(t.time_stamp) = 2020
+group by user_id; 
+```
+
+# 1741. Find Total Time Spent by Each Employee
+
+```mysql
+Create table If Not Exists Employees
+(
+    emp_id    int,
+    event_day date,
+    in_time   int,
+    out_time  int
+);
+Truncate table Employees;
+insert into Employees (emp_id, event_day, in_time, out_time)
+values ('1', '2020-11-28', '4', '32');
+insert into Employees (emp_id, event_day, in_time, out_time)
+values ('1', '2020-11-28', '55', '200');
+insert into Employees (emp_id, event_day, in_time, out_time)
+values ('1', '2020-12-3', '1', '42');
+insert into Employees (emp_id, event_day, in_time, out_time)
+values ('2', '2020-11-28', '3', '33');
+insert into Employees (emp_id, event_day, in_time, out_time)
+values ('2', '2020-12-9', '47', '74');
+```
+
+Table: Employees
+
+Write an SQL query to calculate the total time in minutes spent by each employee on each day at the office. Note that
+within one day, an employee can enter and leave more than once. The time spent in the office for a single entry is
+out_time - in_time.
+
+Return the result table in any order.
+
+```mysql
+select t.event_day                 as day,
+       t.emp_id,
+       sum(t.out_time - t.in_time) as total_time
+from employees t
+group by t.emp_id,
+         t.event_day;
+```
+
