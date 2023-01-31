@@ -1119,3 +1119,125 @@ group by t.emp_id,
          t.event_day;
 ```
 
+# 1393. Capital Gain/Loss
+
+```mysql
+Create Table If Not Exists Stocks (stock_name varchar(15), operation ENUM('Sell', 'Buy'), operation_day int, price int);
+Truncate table Stocks;
+insert into Stocks (stock_name, operation, operation_day, price) values ('Leetcode', 'Buy', '1', '1000');
+insert into Stocks (stock_name, operation, operation_day, price) values ('Corona Masks', 'Buy', '2', '10');
+insert into Stocks (stock_name, operation, operation_day, price) values ('Leetcode', 'Sell', '5', '9000');
+insert into Stocks (stock_name, operation, operation_day, price) values ('Handbags', 'Buy', '17', '30000');
+insert into Stocks (stock_name, operation, operation_day, price) values ('Corona Masks', 'Sell', '3', '1010');
+insert into Stocks (stock_name, operation, operation_day, price) values ('Corona Masks', 'Buy', '4', '1000');
+insert into Stocks (stock_name, operation, operation_day, price) values ('Corona Masks', 'Sell', '5', '500');
+insert into Stocks (stock_name, operation, operation_day, price) values ('Corona Masks', 'Buy', '6', '1000');
+insert into Stocks (stock_name, operation, operation_day, price) values ('Handbags', 'Sell', '29', '7000');
+insert into Stocks (stock_name, operation, operation_day, price) values ('Corona Masks', 'Sell', '10', '10000');
+```
+
+Write an SQL query to report the Capital gain/loss for each stock.
+
+The Capital gain/loss of a stock is the total gain or loss after buying and selling the stock one or many times.
+
+```mysql
+select t.stock_name,
+       sum(case when t.operation = 'Buy' then -t.price else t.price end) as capital_gain_loss
+from stocks t
+group by t.stock_name;
+```
+
+# 1407. Top Travellers
+
+```mysql
+Create Table If Not Exists Users (id int, name varchar(30));
+Create Table If Not Exists Rides (id int, user_id int, distance int);
+Truncate table Users;
+insert into Users (id, name) values ('1', 'Alice');
+insert into Users (id, name) values ('2', 'Bob');
+insert into Users (id, name) values ('3', 'Alex');
+insert into Users (id, name) values ('4', 'Donald');
+insert into Users (id, name) values ('7', 'Lee');
+insert into Users (id, name) values ('13', 'Jonathan');
+insert into Users (id, name) values ('19', 'Elvis');
+Truncate table Rides;
+insert into Rides (id, user_id, distance) values ('1', '1', '120');
+insert into Rides (id, user_id, distance) values ('2', '2', '317');
+insert into Rides (id, user_id, distance) values ('3', '3', '222');
+insert into Rides (id, user_id, distance) values ('4', '7', '100');
+insert into Rides (id, user_id, distance) values ('5', '13', '312');
+insert into Rides (id, user_id, distance) values ('6', '19', '50');
+insert into Rides (id, user_id, distance) values ('7', '7', '120');
+insert into Rides (id, user_id, distance) values ('8', '19', '400');
+insert into Rides (id, user_id, distance) values ('9', '7', '230');
+```
+
+Table: Users
+
+Table: Rides
+
+Write an SQL query to report the distance traveled by each user.
+
+Return the result table ordered by travelled_distance in descending order, if two or more users traveled the same distance, order them by their name in ascending order.
+
+
+```mysql
+select u.name,
+       sum(case when r.distance is null then 0 else r.distance end) as travelled_distance
+from users u
+left outer join rides r
+on u.id = r.user_id
+group by r.user_id,
+         u.name
+order by travelled_distance desc,
+         u.name;
+```
+
+
+# 1158. Market Analysis I
+
+```mysql
+Create table If Not Exists Users (user_id int, join_date date, favorite_brand varchar(10));
+Create table If Not Exists Orders (order_id int, order_date date, item_id int, buyer_id int, seller_id int);
+Create table If Not Exists Items (item_id int, item_brand varchar(10));
+Truncate table Users;
+insert into Users (user_id, join_date, favorite_brand) values ('1', '2018-01-01', 'Lenovo');
+insert into Users (user_id, join_date, favorite_brand) values ('2', '2018-02-09', 'Samsung');
+insert into Users (user_id, join_date, favorite_brand) values ('3', '2018-01-19', 'LG');
+insert into Users (user_id, join_date, favorite_brand) values ('4', '2018-05-21', 'HP');
+Truncate table Orders;
+insert into Orders (order_id, order_date, item_id, buyer_id, seller_id) values ('1', '2019-08-01', '4', '1', '2');
+insert into Orders (order_id, order_date, item_id, buyer_id, seller_id) values ('2', '2018-08-02', '2', '1', '3');
+insert into Orders (order_id, order_date, item_id, buyer_id, seller_id) values ('3', '2019-08-03', '3', '2', '3');
+insert into Orders (order_id, order_date, item_id, buyer_id, seller_id) values ('4', '2018-08-04', '1', '4', '2');
+insert into Orders (order_id, order_date, item_id, buyer_id, seller_id) values ('5', '2018-08-04', '1', '3', '4');
+insert into Orders (order_id, order_date, item_id, buyer_id, seller_id) values ('6', '2019-08-05', '2', '2', '4');
+Truncate table Items;
+insert into Items (item_id, item_brand) values ('1', 'Samsung');
+insert into Items (item_id, item_brand) values ('2', 'Lenovo');
+insert into Items (item_id, item_brand) values ('3', 'LG');
+insert into Items (item_id, item_brand) values ('4', 'HP');
+```
+
+Table: Users
+
+Table: Orders
+
+Table: Items
+
+Write an SQL query to find for each user, the join date and the number of orders they made as a buyer in 2019.
+
+Return the result table in any order.
+
+
+```mysql
+select t.user_id       as buyer_id,
+       t.join_date,
+       count(order_id) as orders_in_2019
+from users t
+         left outer join orders o
+                         on t.user_id = o.buyer_id
+                             and year(o.order_date) = 2019
+group by t.user_id, t.join_date;
+```
+
