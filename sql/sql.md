@@ -1241,3 +1241,131 @@ from users t
 group by t.user_id, t.join_date;
 ```
 
+
+# 182. Duplicate Emails
+
+```mysql
+Create table If Not Exists Person (id int, email varchar(255));
+Truncate table Person;
+insert into Person (id, email) values ('1', 'a@b.com');
+insert into Person (id, email) values ('2', 'c@d.com');
+insert into Person (id, email) values ('3', 'a@b.com');
+```
+
+Table: Person
+
+Write an SQL query to report all the duplicate emails.
+
+Return the result table in any order.
+
+```mysql
+select t.email
+from person t
+group by t.email
+having count(t.email) > 1;
+```
+
+# 1050. Actors and Directors Who Cooperated At Least Three Times
+
+```mysql
+Create table If Not Exists ActorDirector (actor_id int, director_id int, timestamp int);
+Truncate table ActorDirector;
+insert into ActorDirector (actor_id, director_id, timestamp) values ('1', '1', '0');
+insert into ActorDirector (actor_id, director_id, timestamp) values ('1', '1', '1');
+insert into ActorDirector (actor_id, director_id, timestamp) values ('1', '1', '2');
+insert into ActorDirector (actor_id, director_id, timestamp) values ('1', '2', '3');
+insert into ActorDirector (actor_id, director_id, timestamp) values ('1', '2', '4');
+insert into ActorDirector (actor_id, director_id, timestamp) values ('2', '1', '5');
+insert into ActorDirector (actor_id, director_id, timestamp) values ('2', '1', '6');
+```
+
+Table: ActorDirector
+
+Write a SQL query for a report that provides the pairs (actor_id, director_id) where the actor has cooperated with the director at least three times.
+
+Return the result table in any order.
+
+```mysql
+select t.actor_id,
+       t.director_id
+from ActorDirector t
+group by t.actor_id,
+         t.director_id
+having count(t.timestamp) > 2;
+```
+
+# 1587. Bank Account Summary II
+
+```mysql
+Create table If Not Exists Users (account int, name varchar(20));
+Create table If Not Exists Transactions (trans_id int, account int, amount int, transacted_on date);
+Truncate table Users;
+insert into Users (account, name) values ('900001', 'Alice');
+insert into Users (account, name) values ('900002', 'Bob');
+insert into Users (account, name) values ('900003', 'Charlie');
+Truncate table Transactions;
+insert into Transactions (trans_id, account, amount, transacted_on) values ('1', '900001', '7000', '2020-08-01');
+insert into Transactions (trans_id, account, amount, transacted_on) values ('2', '900001', '7000', '2020-09-01');
+insert into Transactions (trans_id, account, amount, transacted_on) values ('3', '900001', '-3000', '2020-09-02');
+insert into Transactions (trans_id, account, amount, transacted_on) values ('4', '900002', '1000', '2020-09-12');
+insert into Transactions (trans_id, account, amount, transacted_on) values ('5', '900003', '6000', '2020-08-07');
+insert into Transactions (trans_id, account, amount, transacted_on) values ('6', '900003', '6000', '2020-09-07');
+insert into Transactions (trans_id, account, amount, transacted_on) values ('7', '900003', '-4000', '2020-09-11');
+```
+
+Table: Users
+
+Table: Transactions
+
+Write an SQL query to report the name and balance of users with a balance higher than 10000. The balance of an account is equal to the sum of the amounts of all transactions involving that account.
+
+Return the result table in any order.
+
+```mysql
+select u.name,
+       sum(t.amount) as balance
+from users u
+inner join transactions t
+on u.account = t.account
+group by u.name
+having balance > 10000;
+```
+
+# 1084. Sales Analysis III
+
+```mysql
+Create table If Not Exists Product (product_id int, product_name varchar(10), unit_price int);
+Create table If Not Exists Sales (seller_id int, product_id int, buyer_id int, sale_date date, quantity int, price int);
+Truncate table Product;
+insert into Product (product_id, product_name, unit_price) values ('1', 'S8', '1000');
+insert into Product (product_id, product_name, unit_price) values ('2', 'G4', '800');
+insert into Product (product_id, product_name, unit_price) values ('3', 'iPhone', '1400');
+Truncate table Sales;
+insert into Sales (seller_id, product_id, buyer_id, sale_date, quantity, price) values ('1', '1', '1', '2019-01-21', '2', '2000');
+insert into Sales (seller_id, product_id, buyer_id, sale_date, quantity, price) values ('1', '2', '2', '2019-02-17', '1', '800');
+insert into Sales (seller_id, product_id, buyer_id, sale_date, quantity, price) values ('2', '2', '3', '2019-06-02', '1', '800');
+insert into Sales (seller_id, product_id, buyer_id, sale_date, quantity, price) values ('3', '3', '4', '2019-05-13', '2', '2800');
+```
+
+Table: Product
+
+Table: Sales
+
+Write an SQL query that reports the products that were only sold in the first quarter of 2019. That is, between 2019-01-01 and 2019-03-31 inclusive.
+
+Return the result table in any order.
+
+```mysql
+select distinct p.product_id,
+                p.product_name
+from product p
+         inner join (select t.*
+                     from sales t
+                     where t.product_id not in (select distinct s.product_id
+                                                from sales s
+                                                where s.sale_date < '2019-01-01'
+                                                   or s.sale_date >= '2019-04-01')) s
+                    on p.product_id = s.product_id
+where s.sale_date >= '2019-01-01'
+  and s.sale_date < '2019-04-01';
+```
