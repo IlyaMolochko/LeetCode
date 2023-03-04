@@ -731,3 +731,118 @@ from employee t
      on t.team_id = e.team_id
 ```
 
+# 1280. Students and Examinations
+
+```mysql
+Create table If Not Exists Students (student_id int, student_name varchar(20));
+Create table If Not Exists Subjects (subject_name varchar(20));
+Create table If Not Exists Examinations (student_id int, subject_name varchar(20));
+Truncate table Students;
+insert into Students (student_id, student_name) values ('1', 'Alice');
+insert into Students (student_id, student_name) values ('2', 'Bob');
+insert into Students (student_id, student_name) values ('13', 'John');
+insert into Students (student_id, student_name) values ('6', 'Alex');
+Truncate table Subjects;
+insert into Subjects (subject_name) values ('Math');
+insert into Subjects (subject_name) values ('Physics');
+insert into Subjects (subject_name) values ('Programming');
+Truncate table Examinations;
+insert into Examinations (student_id, subject_name) values ('1', 'Math');
+insert into Examinations (student_id, subject_name) values ('1', 'Physics');
+insert into Examinations (student_id, subject_name) values ('1', 'Programming');
+insert into Examinations (student_id, subject_name) values ('2', 'Programming');
+insert into Examinations (student_id, subject_name) values ('1', 'Physics');
+insert into Examinations (student_id, subject_name) values ('1', 'Math');
+insert into Examinations (student_id, subject_name) values ('13', 'Math');
+insert into Examinations (student_id, subject_name) values ('13', 'Programming');
+insert into Examinations (student_id, subject_name) values ('13', 'Physics');
+insert into Examinations (student_id, subject_name) values ('2', 'Math');
+insert into Examinations (student_id, subject_name) values ('1', 'Math');
+```
+
+Write an SQL query to find the number of times each student attended each exam.
+
+Return the result table ordered by student_id and subject_name.
+
+```mysql
+select
+    s.student_id,
+    s.student_name,
+    t.subject_name,
+    count(e.subject_name) as attended_exams
+from students s
+join subjects t
+left join examinations e
+on s.student_id = e.student_id
+and t.subject_name = e.subject_name
+group by s.student_id, 
+         t.subject_name
+order by s.student_id,
+         t.subject_name;
+```
+
+# 184. Department Highest Salary
+
+```mysql
+Create table If Not Exists Employee (id int, name varchar(255), salary int, departmentId int);
+Create table If Not Exists Department (id int, name varchar(255));
+Truncate table Employee;
+insert into Employee (id, name, salary, departmentId) values ('1', 'Joe', '70000', '1');
+insert into Employee (id, name, salary, departmentId) values ('2', 'Jim', '90000', '1');
+insert into Employee (id, name, salary, departmentId) values ('3', 'Henry', '80000', '2');
+insert into Employee (id, name, salary, departmentId) values ('4', 'Sam', '60000', '2');
+insert into Employee (id, name, salary, departmentId) values ('5', 'Max', '90000', '1');
+Truncate table Department;
+insert into Department (id, name) values ('1', 'IT');
+insert into Department (id, name) values ('2', 'Sales');
+```
+
+Write an SQL query to find employees who have the highest salary in each of the departments.
+
+Return the result table in any order.
+
+```mysql
+with max_salary as (select max(t.salary) as salary,
+                           t.departmentid
+                    from employee t
+                    group by departmentid)
+select d.name as department,
+       e.name as employee,
+       e.salary
+from employee e
+         join max_salary t
+              on e.departmentid = t.departmentid
+                  and e.salary = t.salary
+         join department d
+              on d.id = e.departmentid;
+```
+
+# 580. Count Student Number in Departments
+
+```mysql
+Create table If Not Exists Student (student_id int,student_name varchar(45), gender varchar(6), dept_id int);
+Create table If Not Exists Department (dept_id int, dept_name varchar(255));
+Truncate table Student;
+insert into Student (student_id, student_name, gender, dept_id) values ('1', 'Jack', 'M', '1');
+insert into Student (student_id, student_name, gender, dept_id) values ('2', 'Jane', 'F', '1');
+insert into Student (student_id, student_name, gender, dept_id) values ('3', 'Mark', 'M', '2');
+Truncate table Department;
+insert into Department (dept_id, dept_name) values ('1', 'Engineering');
+insert into Department (dept_id, dept_name) values ('2', 'Science');
+insert into Department (dept_id, dept_name) values ('3', 'Law');
+```
+
+Write an SQL query to report the respective department name and number of students majoring in each department for all departments in the Department table (even ones with no current students).
+
+Return the result table ordered by student_number in descending order. In case of a tie, order them by dept_name alphabetically.
+
+```mysql
+select d.dept_name,
+       count(s.student_id) as student_number
+from department d
+         left join student s
+                   on d.dept_id = s.dept_id
+group by d.dept_name
+order by student_number desc,
+         d.dept_name;
+```
