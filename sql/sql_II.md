@@ -584,3 +584,150 @@ having sum(case when o.product_name = 'A' then 1 else 0 end) > 0
    and sum(case when o.product_name = 'C' then 1 else 0 end) = 0
 order by t.customer_id
 ```
+
+# 1440. Evaluate Boolean Expression
+
+```mysql
+Create Table If Not Exists Variables (name varchar(3), value int);
+Create Table If Not Exists Expressions (left_operand varchar(3), operator ENUM('>', '<', '='), right_operand varchar(3));
+Truncate table Variables;
+insert into Variables (name, value) values ('x', '66');
+insert into Variables (name, value) values ('y', '77');
+Truncate table Expressions;
+insert into Expressions (left_operand, operator, right_operand) values ('x', '>', 'y');
+insert into Expressions (left_operand, operator, right_operand) values ('x', '<', 'y');
+insert into Expressions (left_operand, operator, right_operand) values ('x', '=', 'y');
+insert into Expressions (left_operand, operator, right_operand) values ('y', '>', 'x');
+insert into Expressions (left_operand, operator, right_operand) values ('y', '<', 'x');
+insert into Expressions (left_operand, operator, right_operand) values ('x', '=', 'x');
+```
+
+Write an SQL query to evaluate the boolean expressions in Expressions table.
+
+Return the result table in any order.
+
+```mysql
+select t.left_operand,
+       t.operator,
+       t.right_operand,
+       (case
+            when t.operator = '=' and lft.value = rht.value then 'true'
+            when t.operator = '>=' and lft.value >= rht.value then 'true'
+            when t.operator = '<=' and lft.value <= rht.value then 'true'
+            when t.operator = '>' and lft.value > rht.value then 'true'
+            when t.operator = '<' and lft.value < rht.value then 'true'
+            else 'false' end) as value
+from expressions t
+         join variables lft
+              on t.left_operand = lft.name
+         join variables rht
+              on t.right_operand = rht.name;
+```
+
+# 1264. Page Recommendations
+
+```mysql
+Create table If Not Exists Friendship (user1_id int, user2_id int);
+Create table If Not Exists Likes (user_id int, page_id int);
+Truncate table Friendship;
+insert into Friendship (user1_id, user2_id) values ('1', '2');
+insert into Friendship (user1_id, user2_id) values ('1', '3');
+insert into Friendship (user1_id, user2_id) values ('1', '4');
+insert into Friendship (user1_id, user2_id) values ('2', '3');
+insert into Friendship (user1_id, user2_id) values ('2', '4');
+insert into Friendship (user1_id, user2_id) values ('2', '5');
+insert into Friendship (user1_id, user2_id) values ('6', '1');
+Truncate table Likes;
+insert into Likes (user_id, page_id) values ('1', '88');
+insert into Likes (user_id, page_id) values ('2', '23');
+insert into Likes (user_id, page_id) values ('3', '24');
+insert into Likes (user_id, page_id) values ('4', '56');
+insert into Likes (user_id, page_id) values ('5', '11');
+insert into Likes (user_id, page_id) values ('6', '33');
+insert into Likes (user_id, page_id) values ('2', '77');
+insert into Likes (user_id, page_id) values ('3', '77');
+insert into Likes (user_id, page_id) values ('6', '88');
+```
+
+Write an SQL query to recommend pages to the user with user_id = 1 using the pages that your friends liked. It should not recommend pages you already liked.
+
+Return result table in any order without duplicates.
+
+```mysql
+with friends as (select t.user2_id as friend_id
+                 from friendship t
+                 where t.user1_id = 1
+                 union
+                 select t.user1_id as friend_id
+                 from friendship t
+                 where t.user2_id = 1),
+     user1_likes as (select t.page_id
+                     from likes t
+                     where t.user_id = 1),
+     others_likes as (select t.user_id,
+                             t.page_id
+                      from likes t
+                      where t.user_id <> 1)
+select distinct t.page_id as recommended_page
+from others_likes t
+         join friends f
+              on t.user_id = f.friend_id
+where t.page_id not in (select *
+                        from user1_likes t)
+```
+
+# 570. Managers with at Least 5 Direct Reports
+
+```mysql
+Create table If Not Exists Employee (id int, name varchar(255), department varchar(255), managerId int);
+Truncate table Employee;
+insert into Employee (id, name, department, managerId) values ('101', 'John', 'A', 'None');
+insert into Employee (id, name, department, managerId) values ('102', 'Dan', 'A', '101');
+insert into Employee (id, name, department, managerId) values ('103', 'James', 'A', '101');
+insert into Employee (id, name, department, managerId) values ('104', 'Amy', 'A', '101');
+insert into Employee (id, name, department, managerId) values ('105', 'Anne', 'A', '101');
+insert into Employee (id, name, department, managerId) values ('106', 'Ron', 'B', '101');
+```
+
+Write an SQL query to report the managers with at least five direct reports.
+
+Return the result table in any order.
+
+```mysql
+select t.name
+from employee t
+where t.id in (select e.managerId
+               from employee e
+               group by e.managerId
+               having count(e.managerId) >= 5)
+```
+
+# 1303. Find the Team Size
+
+```mysql
+Create table If Not Exists Employee (employee_id int, team_id int);
+Truncate table Employee;
+insert into Employee (employee_id, team_id) values ('1', '8');
+insert into Employee (employee_id, team_id) values ('2', '8');
+insert into Employee (employee_id, team_id) values ('3', '8');
+insert into Employee (employee_id, team_id) values ('4', '7');
+insert into Employee (employee_id, team_id) values ('5', '9');
+insert into Employee (employee_id, team_id) values ('6', '9');
+```
+
+Write an SQL query to find the team size of each of the employees.
+
+Return result table in any order.
+
+```mysql
+select t.employee_id,
+       e.team_size
+from employee t
+         join
+     (select t.team_id,
+             count(t.team_id) as team_size
+      from employee t
+      group by t.team_id) e
+     on t.team_id = e.team_id
+```
+
